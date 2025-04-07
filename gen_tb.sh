@@ -1,3 +1,9 @@
+#!/bin/bash
+
+QTD=$1
+QTD_MINUS_ONE=$((QTD - 1))
+
+cat > tb.v <<EOF
 module tb();
 
 reg [10:0] entrada;
@@ -6,21 +12,21 @@ reg [3:0] n;
 reg injeta_erro;
 wire [14:0] alterado;
 wire [10:0] saida;
-reg [15:0] dados_arquivo [0:29];
+reg [15:0] dados_arquivo [0:${QTD_MINUS_ONE}];
 
 integer i;
 
 integer quantidade;
 
 initial begin
-  quantidade = 30;
+  quantidade = $QTD;
 
 
 
-  $readmemb("teste.txt", dados_arquivo);
-  $dumpfile("saida.vcd");
-  $dumpvars(0, tb);
-  $monitor("entrada=%b, saida=%b", entrada, saida);
+  \$readmemb("teste.txt", dados_arquivo);
+  \$dumpfile("saida.vcd");
+  \$dumpvars(0, tb);
+  \$monitor("entrada=%b, saida=%b", entrada, saida);
 
   for (i = 0; i < quantidade; i = i + 1) begin
     entrada = dados_arquivo[i][15:5];
@@ -48,3 +54,5 @@ corrige_hamming coh(
 );
 
 endmodule
+EOF
+

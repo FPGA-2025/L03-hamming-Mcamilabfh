@@ -1,4 +1,6 @@
 test/*.out
 tb
 *.vcd
-gabarito
+gabarito/*
+venv
+yosys2digitaljs
