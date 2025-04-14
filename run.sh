@@ -19,10 +19,22 @@ cp saida.out test/saida$1.out
 cp saida.vcd test/saida$1.vcd
 rm saida.out saida.vcd teste.txt
 
-if cmp -s test/saida$1.out test/saida$1.ok; then
+if [ -f test/saida$1.out ] && [ -f test/saida$1.ok ]; then
+  grep -v '^VCD info' test/saida$1.out > temp_out.txt
+  grep -v '^VCD info' test/saida$1.ok  > temp_ok.txt
+
+  if cmp -s temp_out.txt temp_ok.txt; then
     echo "OK"
+    rm -f temp_out.txt temp_ok.txt
     exit 0
-else
+  else
     echo "ERRO"
+    echo "--- Diferença entre arquivos após filtro ---"
+    diff temp_ok.txt temp_out.txt
+    rm -f temp_out.txt temp_ok.txt
     exit 1
+  fi
+else
+  echo "ERRO: Arquivos de saída não encontrados!"
+  exit 1
 fi
